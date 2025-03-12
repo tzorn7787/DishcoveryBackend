@@ -7,6 +7,11 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Get()
+  readAll() {
+    return this.userService.readAll();
+  }
+
   @Get(':id')
   readOne(@Param('id') id: string) {
     return this.userService.readOne(+id);

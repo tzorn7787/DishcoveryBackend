@@ -20,11 +20,20 @@ let UserController = class UserController {
     constructor(userService) {
         this.userService = userService;
     }
+    readAll() {
+        return this.userService.readAll();
+    }
     readOne(id) {
         return this.userService.readOne(+id);
     }
 };
 exports.UserController = UserController;
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], UserController.prototype, "readAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
