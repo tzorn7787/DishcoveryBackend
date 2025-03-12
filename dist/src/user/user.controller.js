@@ -26,6 +26,9 @@ let UserController = class UserController {
     readOne(id) {
         return this.userService.readOne(+id);
     }
+    delete(id) {
+        return this.userService.delete(+id);
+    }
 };
 exports.UserController = UserController;
 __decorate([
@@ -41,6 +44,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "readOne", null);
+__decorate([
+    (0, common_1.Post)(),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], UserController.prototype, "delete", null);
 exports.UserController = UserController = __decorate([
     (0, common_1.Controller)('user'),
     __metadata("design:paramtypes", [user_service_1.UserService])
