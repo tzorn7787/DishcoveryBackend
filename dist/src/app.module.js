@@ -27,14 +27,18 @@ const tag_entity_1 = require("./recipe/tag.entity");
 const recipe_report_entity_1 = require("./recipe-report/recipe-report.entity");
 const recipe_report_service_1 = require("./recipe-report/recipe-report.service");
 const recipe_report_module_1 = require("./recipe-report/recipe-report.module");
+const auth_modul_1 = require("./auth/auth.modul");
+const auth_service_1 = require("./auth/auth.service");
 let AppModule = class AppModule {
     userService;
     recipeService;
     recipeReportService;
-    constructor(userService, recipeService, recipeReportService) {
+    authService;
+    constructor(userService, recipeService, recipeReportService, authService) {
         this.userService = userService;
         this.recipeService = recipeService;
         this.recipeReportService = recipeReportService;
+        this.authService = authService;
     }
     async onModuleInit() {
         const user = new user_entity_1.User();
@@ -97,12 +101,14 @@ exports.AppModule = AppModule = __decorate([
             user_module_1.UserModule,
             recipe_module_1.RecipeModule,
             recipe_report_module_1.RecipeReportModule,
+            auth_modul_1.AuthModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     }),
     __metadata("design:paramtypes", [user_service_1.UserService,
         recipe_service_1.RecipeService,
-        recipe_report_service_1.RecipeReportService])
+        recipe_report_service_1.RecipeReportService,
+        auth_service_1.AuthService])
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

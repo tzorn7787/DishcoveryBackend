@@ -41,6 +41,9 @@ let UserService = class UserService {
     async delete(id) {
         await this.usersRepository.delete(id);
     }
+    async findByEmail(email) {
+        return this.usersRepository.findOne({ where: { email } });
+    }
 };
 exports.UserService = UserService;
 exports.UserService = UserService = __decorate([

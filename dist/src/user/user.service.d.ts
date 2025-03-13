@@ -8,4 +8,5 @@ export declare class UserService {
     readOne(id: number): Promise<User | null>;
     update(id: number, data: Partial<User>): Promise<import("typeorm").UpdateResult>;
     delete(id: number): Promise<void>;
+    findByEmail(email: string): Promise<User | null>;
 }
