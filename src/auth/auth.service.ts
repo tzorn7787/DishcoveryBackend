@@ -34,6 +34,7 @@ export class AuthService {
   
 
 async login(identifier: string, password: string) {
+  console.log(`Login-Anfrage für: ${identifier}`);
   const user = await this.usersRepository.findOne({
     where: [{ email: identifier }, { username: identifier }],
   });

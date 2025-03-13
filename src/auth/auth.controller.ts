@@ -15,5 +15,4 @@ export class AuthController {
   async login(@Body() loginData: { identifier: string; password: string }) {
     return this.authService.login(loginData.identifier, loginData.password);
   }
-  
 }
