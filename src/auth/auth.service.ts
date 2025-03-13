@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../user/user.entity';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 
 
 @Injectable()
@@ -31,19 +32,24 @@ export class AuthService {
     return this.usersRepository.save(user);
   }
   
-  //Für später, vermutlich login oder Passwort vergessen
-  async validateUser(identifier: string, password: string): Promise<User | null> {
-    const user = await this.usersRepository.findOne({
-      where: [{ email: identifier }, { username: identifier }],
-    });
-  
-    if (!user) return null; //  Kein Nutzer gefunden 
-    
-    //Passwort-Hash aus der Antwort entfernen
-    const { passwordHash, ...userWithoutPassword } = user;
-  
-    return userWithoutPassword as User;
+
+async login(identifier: string, password: string) {
+  const user = await this.usersRepository.findOne({
+    where: [{ email: identifier }, { username: identifier }],
+  });
+
+  if (!user) {
+    throw new Error('Benutzer nicht gefunden');
   }
-  
+
+  const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+  if (!isPasswordValid) {
+    throw new Error('Falsches Passwort');
+  }
+
+  // Passwort aus der Antwort entfernen
+  const { passwordHash, ...userWithoutPassword } = user;
+  return userWithoutPassword;
+}
   
 }

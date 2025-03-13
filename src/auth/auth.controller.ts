@@ -11,9 +11,9 @@ export class AuthController {
     return this.authService.register(userData);
   }
   
-  @Get('register')
-  getRegisterMessage() {
-    return { message: 'This is the register route. Use POST to register a user.' };
+  @Post('login')
+  async login(@Body() loginData: { identifier: string; password: string }) {
+    return this.authService.login(loginData.identifier, loginData.password);
   }
   
 }
