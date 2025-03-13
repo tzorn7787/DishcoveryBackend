@@ -8,6 +8,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RecipeController = void 0;
 const common_1 = require("@nestjs/common");
@@ -17,8 +20,27 @@ let RecipeController = class RecipeController {
     constructor(recipeService) {
         this.recipeService = recipeService;
     }
+    readAll() {
+        return this.recipeService.readAll();
+    }
+    readOne(id) {
+        return this.recipeService.readOne(+id);
+    }
 };
 exports.RecipeController = RecipeController;
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], RecipeController.prototype, "readAll", null);
+__decorate([
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], RecipeController.prototype, "readOne", null);
 exports.RecipeController = RecipeController = __decorate([
     (0, common_1.Controller)('recipe'),
     __metadata("design:paramtypes", [recipe_service_1.RecipeService])
