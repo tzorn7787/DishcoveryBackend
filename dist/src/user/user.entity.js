@@ -20,6 +20,7 @@ let User = class User extends base_1.BaseEntity {
     passwordHash;
     userImgUrl;
     role;
+    profileText;
     watchEntries;
     async hashPassword() {
         this.passwordHash = await bcrypt.hash(this.passwordHash, 10);
@@ -50,6 +51,10 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true, default: '' }),
+    __metadata("design:type", String)
+], User.prototype, "profileText", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => watch_entry_entity_1.WatchEntry, (watchEntry) => watchEntry.user, {
         cascade: true,

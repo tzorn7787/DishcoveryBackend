@@ -6,6 +6,7 @@ export declare class User extends BaseEntity {
     passwordHash: string;
     userImgUrl?: string;
     role: 'user' | 'admin';
+    profileText: string;
     watchEntries: WatchEntry[];
     hashPassword(): Promise<void>;
 }

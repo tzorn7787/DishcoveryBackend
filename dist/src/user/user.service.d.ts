@@ -6,7 +6,7 @@ export declare class UserService {
     create(user: User): Promise<User>;
     readAll(): Promise<User[]>;
     readOne(id: number): Promise<User | null>;
-    update(id: number, data: Partial<User>): Promise<import("typeorm").UpdateResult>;
+    updateUser(id: number, data: Partial<User>): Promise<User>;
     delete(id: number): Promise<void>;
     findByEmail(email: string): Promise<User | null>;
 }

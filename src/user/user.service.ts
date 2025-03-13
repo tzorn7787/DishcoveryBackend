@@ -27,8 +27,15 @@ export class UserService {
     return result ? result[0] : null;
   }
 
-  async update(id: number, data: Partial<User>) {
-    return await this.usersRepository.update(id, data);
+  async updateUser(id: number, data: Partial<User>): Promise<User> {
+    await this.usersRepository.update(id, data);
+    const updatedUser = await this.usersRepository.findOne({ where: { id } });
+  
+    if (!updatedUser) {
+      throw new Error('Benutzer nicht gefunden');
+    }
+  
+    return updatedUser;
   }
 
   async delete(id: number): Promise<void> {

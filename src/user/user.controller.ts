@@ -24,10 +24,9 @@ export class UserController {
     return this.userService.create(user);
   }
 
-  // PUT /user/:id → Aktualisiert einen Benutzer
   @Put(':id')
-  updateUser(@Param('id') id: number, @Body() data: Partial<User>) {
-    return this.userService.update(Number(id), data);
+  async updateUser(@Param('id') id: number, @Body() data: Partial<User>): Promise<User> {
+    return this.userService.updateUser(id, data);
   }
 
   // DELETE /user/:id → Löscht einen Benutzer

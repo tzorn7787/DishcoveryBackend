@@ -24,6 +24,9 @@ export class User extends BaseEntity {
   })
   role: 'user' | 'admin';
 
+  @Column({ nullable: true, default: '' }) 
+  profileText: string;  
+
   @OneToMany(() => WatchEntry, (watchEntry) => watchEntry.user, {
     cascade: true,
   })

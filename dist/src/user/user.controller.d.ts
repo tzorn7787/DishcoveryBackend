@@ -6,6 +6,6 @@ export declare class UserController {
     getAllUsers(): Promise<User[]>;
     getUser(id: number): Promise<User | null>;
     createUser(user: User): Promise<User>;
-    updateUser(id: number, data: Partial<User>): Promise<import("typeorm").UpdateResult>;
+    updateUser(id: number, data: Partial<User>): Promise<User>;
     deleteUser(id: number): Promise<void>;
 }
