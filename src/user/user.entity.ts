@@ -1,6 +1,7 @@
-import { Column, Entity, OneToMany } from 'typeorm';
+import { BeforeInsert,Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../shared/base';
 import { WatchEntry } from './watch-entry.entity';
+import * as bcrypt from 'bcrypt';
 
 @Entity()
 export class User extends BaseEntity {
@@ -27,4 +28,10 @@ export class User extends BaseEntity {
     cascade: true,
   })
   watchEntries: WatchEntry[];
+
+   // Vor dem Speichern das Passwort hashen
+   @BeforeInsert()
+   async hashPassword() {
+     this.passwordHash = await bcrypt.hash(this.passwordHash, 10);
+   }
 }

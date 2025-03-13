@@ -13,6 +13,7 @@ exports.User = void 0;
 const typeorm_1 = require("typeorm");
 const base_1 = require("../shared/base");
 const watch_entry_entity_1 = require("./watch-entry.entity");
+const bcrypt = require("bcrypt");
 let User = class User extends base_1.BaseEntity {
     username;
     email;
@@ -20,6 +21,9 @@ let User = class User extends base_1.BaseEntity {
     userImgUrl;
     role;
     watchEntries;
+    async hashPassword() {
+        this.passwordHash = await bcrypt.hash(this.passwordHash, 10);
+    }
 };
 exports.User = User;
 __decorate([
@@ -52,6 +56,12 @@ __decorate([
     }),
     __metadata("design:type", Array)
 ], User.prototype, "watchEntries", void 0);
+__decorate([
+    (0, typeorm_1.BeforeInsert)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], User.prototype, "hashPassword", null);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)()
 ], User);
