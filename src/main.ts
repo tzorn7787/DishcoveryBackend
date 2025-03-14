@@ -11,6 +11,6 @@ async function bootstrap() {
     credentials: true,
   })
 
-  await app.listen(5000); //Statischer Port festgelegt
+  await app.listen(3001); //Statischer Port festgelegt
 }
 bootstrap();
