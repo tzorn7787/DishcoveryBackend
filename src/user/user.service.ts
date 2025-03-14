@@ -46,5 +46,9 @@ export class UserService {
     return this.usersRepository.findOne({ where: { email } });
   }
   
+  async isAdministrator(username: string) {
+    const user = await this.usersRepository.findOne({ where: { username } });
+    return user?.role === 'admin';
+  }
   
 }
