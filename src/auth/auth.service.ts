@@ -50,7 +50,9 @@ async login(identifier: string, password: string) {
 
   // Passwort aus der Antwort entfernen
   const { passwordHash, ...userWithoutPassword } = user;
-  return userWithoutPassword;
+  return {user :userWithoutPassword,
+          token: 'loggedin'
+  };
 }
   
 }
