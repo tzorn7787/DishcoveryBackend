@@ -2,7 +2,7 @@ import { Controller, Get, Param, Post, Body, Put, Delete } from '@nestjs/common'
 import { RecipeService } from './recipe.service';
 import { Recipe } from './recipe.entity';
 
-@Controller('recipe') // 💡 Legt fest, dass alle Routen mit `/recipe` beginnen
+@Controller('recipe') 
 export class RecipeController {
   constructor(private readonly recipeService: RecipeService) {}
 
