@@ -10,7 +10,7 @@ export class Ingredient {
   recipe: Recipe;
 
   @Column()
-  servings: string; // number??
+  servings: number;
 
   @Column()
   name: string;

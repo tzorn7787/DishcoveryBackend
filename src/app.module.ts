@@ -54,7 +54,7 @@ export class AppModule implements OnModuleInit {
 
     const ingredient = new Ingredient();
     ingredient.name = 'ing';
-    ingredient.servings = '122';
+    ingredient.servings = 122;
     ingredient.amount = 12;
     ingredient.unit = 'g';
 
