@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RecipeController = void 0;
 const common_1 = require("@nestjs/common");
 const recipe_service_1 = require("./recipe.service");
+const recipe_entity_1 = require("./recipe.entity");
 let RecipeController = class RecipeController {
     recipeService;
     constructor(recipeService) {
@@ -25,6 +26,12 @@ let RecipeController = class RecipeController {
     }
     readOne(id) {
         return this.recipeService.readOne(+id);
+    }
+    create(recipe) {
+        return this.recipeService.create(recipe);
+    }
+    update(id, recipe) {
+        return this.recipeService.update(+id, recipe);
     }
 };
 exports.RecipeController = RecipeController;
@@ -41,6 +48,21 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], RecipeController.prototype, "readOne", null);
+__decorate([
+    (0, common_1.Post)(),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [recipe_entity_1.Recipe]),
+    __metadata("design:returntype", void 0)
+], RecipeController.prototype, "create", null);
+__decorate([
+    (0, common_1.Post)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", void 0)
+], RecipeController.prototype, "update", null);
 exports.RecipeController = RecipeController = __decorate([
     (0, common_1.Controller)('recipe'),
     __metadata("design:paramtypes", [recipe_service_1.RecipeService])
