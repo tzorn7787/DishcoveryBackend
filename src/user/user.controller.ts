@@ -1,8 +1,7 @@
-import { Controller, Get, Param, Post, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Put, Delete, Patch, UseInterceptors, UploadedFile} from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-
+import { ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 @ApiTags('user') // 💡 Swagger-Kategorie für User-Endpoints
 @Controller('user')
 export class UserController {
@@ -34,14 +33,21 @@ export class UserController {
     return this.userService.create(user);
   }
 
-  // PUT /user/:id → Aktualisiert einen Benutzer
-  @Put(':id')
-  @ApiOperation({ summary: 'Einen Benutzer aktualisieren' })
-  @ApiResponse({ status: 200, description: 'Benutzer erfolgreich aktualisiert', type: User })
-  @ApiResponse({ status: 404, description: 'Benutzer nicht gefunden' })
-  async updateUser(@Param('id') id: number, @Body() data: Partial<User>): Promise<User> {
-    return this.userService.updateUser(id, data);
+
+  @Put(':id/update-profile')
+  async updateProfile(
+    @Param('id') id: number,
+    @Body() data: any,
+    @UploadedFile() profileImage: Express.Multer.File
+  ) {
+    console.log(`Empfangene Daten für User ${id}:`, data);
+
+    const updatedData = { ...data };
+
+    return this.userService.updateProfile(id, updatedData);
   }
+  
+
 
   // DELETE /user/:id → Löscht einen Benutzer
   @Delete(':id')
@@ -51,4 +57,8 @@ export class UserController {
   deleteUser(@Param('id') id: number): Promise<void> {
     return this.userService.delete(Number(id));
   }
+
+ 
+  
+
 }
