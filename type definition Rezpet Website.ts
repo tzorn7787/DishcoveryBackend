@@ -51,6 +51,13 @@ interface MerkListe {
   savedAt: Date;
 }
 
+// Favoriten Liste
+interface Favoriten {
+  recipeId: string; // Referenz auf recipe.id
+  userId: string; // Referenz auf user.id der sich die Referenz merkt
+  savedAt: Date;
+}
+
 // Tags für Rezepte
 interface Tag {
   id: string;
