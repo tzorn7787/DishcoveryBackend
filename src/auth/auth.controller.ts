@@ -2,6 +2,11 @@ import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { User } from '../user/user.entity';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { Request } from 'express';
+
+export interface AuthenticatedRequest extends Request {
+  user: { id: string; username: string; email: string }; // user definieren
+}
 
 @ApiTags('auth') // Gruppiert die Auth-Routen unter "auth" in Swagger
 @Controller('auth')

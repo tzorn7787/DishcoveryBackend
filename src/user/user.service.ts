@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -27,16 +28,39 @@ export class UserService {
     return result ? result[0] : null;
   }
 
-  async updateUser(id: number, data: Partial<User>): Promise<User> {
-    await this.usersRepository.update(id, data);
-    const updatedUser = await this.usersRepository.findOne({ where: { id } });
-  
-    if (!updatedUser) {
-      throw new Error('Benutzer nicht gefunden');
+  async updateProfile(userId: number, data: any): Promise<User> {
+    console.log('Wie sind nun im Backend');
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
+    if (!user) {
+        throw new Error('Benutzer nicht gefunden');
     }
-  
-    return updatedUser;
-  }
+
+    if (data.username) user.username = data.username;
+    if (data.email) user.email = data.email;
+    if (data.profileText) user.profileText = data.profileText;
+
+    // ✅ Base64 direkt speichern (kein `[object Object]`)
+    console.log(data.profileImage);    
+
+    
+    if (data.profileImage) {
+        user.userImgUrl = data.profileImage;
+        console.log('User-Image:', user.userImgUrl);
+    }
+
+    if (data.oldPassword && data.newPassword) {
+        const isPasswordValid = await bcrypt.compare(data.oldPassword, user.passwordHash);
+        if (!isPasswordValid) {
+            throw new Error('Altes Passwort ist falsch');
+        }
+        user.passwordHash = await bcrypt.hash(data.newPassword, 10);
+    }
+
+    await this.usersRepository.save(user);
+    return user;
+}
+
+
 
   async delete(id: number): Promise<void> {
     await this.usersRepository.delete(id);
