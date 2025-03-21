@@ -59,8 +59,9 @@ export class Recipe extends BaseEntity {
   user: User;
 
   @ApiProperty({ example: '2025-03-14T10:00:00Z', description: 'Datum der letzten Aktualisierung' })
-  @Column({ type: 'datetime' })
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
+  
 
   @ApiProperty({ type: () => [Tag], description: 'Liste der Tags für das Rezept' })
   @ManyToMany(() => Tag, { cascade: true })

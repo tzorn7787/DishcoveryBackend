@@ -28,13 +28,11 @@ export class RecipeController {
 
   // POST /recipe → Erstellt ein neues Rezept
   @Post()
-  @ApiOperation({ summary: 'Ein neues Rezept erstellen' })
-  @ApiResponse({ status: 201, description: 'Rezept erfolgreich erstellt', type: Recipe })
-  @ApiResponse({ status: 400, description: 'Ungültige Eingabe' })
-  createRecipe(@Body() recipe: Recipe): Promise<Recipe> {
-    return this.recipeService.create(recipe);
+  createRecipe(@Body() recipeData: any): Promise<Recipe> {
+    const userId = recipeData.userId;
+    return this.recipeService.createRecipe(recipeData, userId);
   }
-
+  
   // PUT /recipe/:id → Aktualisiert ein Rezept
   @Put(':id')
   @ApiOperation({ summary: 'Ein Rezept aktualisieren' })

@@ -9,6 +9,6 @@ import { WatchEntry } from './watch-entry.entity';
   imports: [TypeOrmModule.forFeature([User, WatchEntry])],
   providers: [UserService],
   controllers: [UserController],
-  exports: [UserService],
+  exports: [UserService,TypeOrmModule],
 })
 export class UserModule {}
