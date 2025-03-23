@@ -3,6 +3,7 @@ import { RecipeService } from './recipe.service';
 import { Recipe } from './recipe.entity';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 
+
 @ApiTags('recipe') // Swagger-Tag für bessere Gruppierung
 @Controller('recipe') // 💡 Legt fest, dass alle Routen mit `/recipe` beginnen
 export class RecipeController {
