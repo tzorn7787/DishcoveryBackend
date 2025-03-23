@@ -26,6 +26,14 @@ export class RecipeController {
     return this.recipeService.readOne(Number(id));
   }
 
+  // GET /recipe/user/:userId
+  @Get('by-user/:userId')
+  getRecipesByUser(@Param('userId') userId: number): Promise<Recipe[]> {
+    return this.recipeService.getByUser(userId);
+  }
+  
+
+
   // POST /recipe → Erstellt ein neues Rezept
   @Post()
   createRecipe(@Body() recipeData: any): Promise<Recipe> {

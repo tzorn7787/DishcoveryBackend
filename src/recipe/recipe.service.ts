@@ -92,4 +92,13 @@ export class RecipeService {
   async delete(id: number): Promise<void> {
     await this.recipeRepository.delete(id);
   }
+
+  async getByUser(userId: number): Promise<Recipe[]> {
+    return this.recipeRepository.find({
+      where: { user: { id: userId } },
+      relations: { tags: true, ratings: true }, 
+    });
+  }
+  
+  
 }
