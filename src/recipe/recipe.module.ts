@@ -6,9 +6,11 @@ import { Recipe } from './recipe.entity';
 import { RecipeController } from './recipe.controller';
 import { Rating } from './rating.entity';
 import { Tag } from './tag.entity';
+import { User } from '../user/user.entity';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Recipe, Ingredient, Rating, Tag])],
+  imports: [TypeOrmModule.forFeature([Recipe, Ingredient, Rating, Tag]), UserModule,User],
   providers: [RecipeService],
   controllers: [RecipeController],
   exports: [RecipeService],
