@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../user/user.entity';
-import { HttpException, HttpStatus } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-
+import { RegisterUserDto } from './dto/register-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -13,46 +13,50 @@ export class AuthService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async register(userData: { username: string; email: string; password: string }): Promise<User> {
+  async register(userData: RegisterUserDto): Promise<User> {
     const { username, email, password } = userData;
 
     const existingUser = await this.usersRepository.findOne({
       where: [{ email }, { username }],
     });
-  
+
     if (existingUser) {
-      throw new HttpException('Benutzername oder E-Mail ist bereits vergeben.', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Benutzername oder E-Mail ist bereits vergeben.',
+        HttpStatus.BAD_REQUEST,
+      );
     }
-  
+
     const user = new User();
     user.username = username;
     user.email = email;
-    user.passwordHash = password; // Passwort wird im BeforeInsert-Listener gehasht
-  
+    user.passwordHash = password; // wird automatisch im Entity gehashed
+
     return this.usersRepository.save(user);
   }
+
+  async login(loginDto: LoginUserDto) {
+    const { identifier, password } = loginDto;
   
-
-async login(identifier: string, password: string) {
-  console.log(`Login-Anfrage für: ${identifier}`);
-  const user = await this.usersRepository.findOne({
-    where: [{ email: identifier }, { username: identifier }],
-  });
-
-  if (!user) {
-    throw new Error('Benutzer nicht gefunden');
+    const user = await this.usersRepository.findOne({
+      where: [{ email: identifier }, { username: identifier }],
+    });
+  
+    if (!user) {
+      throw new HttpException('Benutzer nicht gefunden', HttpStatus.UNAUTHORIZED);
+    }
+  
+    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+    if (!isPasswordValid) {
+      throw new HttpException('Falsches Passwort', HttpStatus.UNAUTHORIZED);
+    }
+  
+    const { passwordHash, ...userWithoutPassword } = user;
+  
+    return {
+      user: userWithoutPassword,
+      token: 'loggedin', 
   }
-
-  const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
-  if (!isPasswordValid) {
-    throw new Error('Falsches Passwort');
-  }
-
-  // Passwort aus der Antwort entfernen
-  const { passwordHash, ...userWithoutPassword } = user;
-  return {user :userWithoutPassword,
-          token: 'loggedin'
-  };
+  
 }
-  
 }
