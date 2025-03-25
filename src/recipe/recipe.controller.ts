@@ -33,12 +33,12 @@ export class RecipeController {
     return this.recipeService.getByUser(userId);
   }
 
-    // POST für die Postman-Tests
-    @Post()
-    createRecipe1(@Body() recipeData: any): Promise<Recipe> {
-      const userId = recipeData.userId;
-      return this.recipeService.create(recipeData, userId);
-    }
+    // POST für die Postman-Tests, muss dann halt auskommentiert werden
+  //  @Post()
+ //   createRecipe1(@Body() recipeData: any): Promise<Recipe> {
+  //    const userId = recipeData.userId;
+  //    return this.recipeService.create(recipeData, userId);
+//}
   
 
   // POST /recipe → Erstellt ein neues Rezept
