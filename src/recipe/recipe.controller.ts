@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Put, Delete, Query } from '@nestjs/common';
 import { RecipeService } from './recipe.service';
 import { Recipe } from './recipe.entity';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
@@ -33,6 +33,10 @@ export class RecipeController {
     return this.recipeService.getByUser(userId);
   }
   
+  @Get('search')
+  searchRecipes(@Query('q') query: string): Promise<Recipe[]> {
+  return this.recipeService.search(query);
+  }
 
 
   // POST /recipe → Erstellt ein neues Rezept
