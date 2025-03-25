@@ -28,68 +28,62 @@ export class RecipeService {
 
    //kommentiert weil keine Ahnung wie es funktioniert. mit create geht aber alles :crying-cat-face:
    async createRecipe(data: CreateRecipeDto, userId: number): Promise<Recipe> {
-     console.log('rezept kam an');
-     // User laden
-     const user = await this.userRepository.findOne({ where: { id: userId } });
-      if (!user) {
+    console.log('📥 Rezept kam an');
+    console.log("🔥 createRecipe aufgerufen")
+    // 1. User laden
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) {
       throw new Error('User not found');
-     }
-  
-     // Rezept-Objekt erstellen
-      const recipe = this.RecipesRepository.create({ 
-       title: data.title,
-      description: data.description,
-       text: data.text,
-        imgUrl: data.imgUrl,
-        difficulty: data.difficulty,
-       prepTime: data.prepTime,
-       cookTime: data.cookTime,
-       servings: data.servings,
-       user
-     });
-  
-      await this.RecipesRepository.save(recipe); // 🔥 Erst speichern, damit recipe eine ID hat!
- 
-     // Ingredients speichern
-     if (data.ingredients) {
-       recipe.ingredients = data.ingredients.map(ingredient => {
-         return this.ingredientRepository.create({
-           name: ingredient.name,
-           amount: ingredient.amount,
-           unit: ingredient.unit as 'g' | 'kg' | 'ml' | 'l' | 'tbsp' | 'tsp' | 'cup' | 'piece',
-           recipe: { id: recipe.id } //  Nur ID übergeben
-         });
-       });
-  
-       await this.ingredientRepository.save(recipe.ingredients);
-     }
-
-      // Tags speichern
-     // Tags speichern
-     // Tags speichern
-if (data.tags && Array.isArray(data.tags)) {
-  const tags: Tag[] = [];
-  for (const tagName of data.tags) {
-    let tag = await this.tagRepository.findOne({ where: { name: tagName } });
-    if (!tag) {
-      tag = this.tagRepository.create({ name: tagName });
-      tag = await this.tagRepository.save(tag);
     }
-    tags.push(tag);
-  }
-  // Aktualisiere die ManyToMany-Relation explizit
-  await this.RecipesRepository.createQueryBuilder()
-    .relation(Recipe, "tags")
-    .of(recipe)
-    .add(tags);
-}
+  
+    console.log('👤 Zugewiesener User:', user);
+    console.log('✅ Rezept vor dem Speichern:', data);
 
+    // 2. Zutaten erstellen
+    const ingredients = (data.ingredients ?? []).map(ingredient => {
+      return this.ingredientRepository.create({
+        name: ingredient.name,
+        amount: ingredient.amount,
+        unit: ingredient.unit as 'g' | 'kg' | 'ml' | 'l' | 'tbsp' | 'tsp' | 'cup' | 'piece',
+      });
+    });
+  
+    // 3. Tags erstellen oder laden
+    const tags: Tag[] = [];
+    if (data.tags && Array.isArray(data.tags)) {
+      for (const tagName of data.tags) {
+        let tag = await this.tagRepository.findOne({ where: { name: tagName } });
+        if (!tag) {
+          tag = this.tagRepository.create({ name: tagName });
+          tag = await this.tagRepository.save(tag);
+        }
+        tags.push(tag);
+      }
+    }
+  
+    // 4. Rezept erstellen (inkl. user, tags, ingredients)
+    const recipe = new Recipe();
+    recipe.title = data.title;
+    recipe.description = data.description;
+    recipe.text = data.text;
+    recipe.imgUrl = data.imgUrl ?? '';
+    recipe.difficulty = data.difficulty;
+    recipe.prepTime = data.prepTime;
+    recipe.cookTime = data.cookTime;
+    recipe.servings = data.servings;
+    recipe.user = user;
+    recipe.ingredients = ingredients;
+    recipe.tags = tags;
+  
+    console.log('📦 Gespeichertes Rezept:', recipe);
 
+    const savedRecipe = await this.RecipesRepository.save(recipe);
+    console.log('🏷️ Gespeicherte Tags:', savedRecipe.tags);
 
-    
-    console.log('recipe', recipe);
+    // 5. Rezept + Zutaten speichern (Zutaten werden wegen `cascade: true` automatisch gespeichert)
     return await this.RecipesRepository.save(recipe);
   }
+  
 
 
   // (!) Attention: If you use this api in production, implement a "where" filter
