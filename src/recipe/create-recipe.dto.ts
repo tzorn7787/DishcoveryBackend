@@ -36,4 +36,9 @@ export class CreateRecipeDto {
   @IsArray()
   @IsOptional()
   tags?: string[];
+
+  @IsNumber()
+  @IsNotEmpty()
+  servings: number;
+
 }
