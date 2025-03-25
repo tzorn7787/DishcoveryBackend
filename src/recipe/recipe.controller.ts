@@ -2,6 +2,7 @@ import { Controller, Get, Param, Post, Body, Put, Delete } from '@nestjs/common'
 import { RecipeService } from './recipe.service';
 import { Recipe } from './recipe.entity';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { RecipeDto } from './dto/recipe-response.dto';
 
 
 @ApiTags('recipe') // Swagger-Tag für bessere Gruppierung
@@ -21,9 +22,9 @@ export class RecipeController {
   @Get(':id')
   @ApiOperation({ summary: 'Ein Rezept nach ID abrufen' })
   @ApiParam({ name: 'id', type: Number, example: 1, description: 'Die ID des Rezepts' })
-  @ApiResponse({ status: 200, description: 'Rezept gefunden', type: Recipe })
+  @ApiResponse({ status: 200, description: 'Rezept gefunden', type: RecipeDto })
   @ApiResponse({ status: 404, description: 'Rezept nicht gefunden' })
-  getRecipe(@Param('id') id: number): Promise<Recipe | null> {
+  getRecipe(@Param('id') id: number): Promise<RecipeDto | null> {
     return this.recipeService.readOne(Number(id));
   }
 

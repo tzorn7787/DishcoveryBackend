@@ -12,10 +12,6 @@ export class Ingredient {
   @ManyToOne(() => Recipe)
   recipe: Recipe;
 
-  @ApiProperty({ example: 4, description: 'Anzahl der Portionen, für die diese Zutat gedacht ist' })
-  @Column()
-  servings: number;
-
   @ApiProperty({ example: 'Mehl', description: 'Name der Zutat' })
   @Column()
   name: string;

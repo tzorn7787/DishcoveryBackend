@@ -46,6 +46,10 @@ export class Recipe extends BaseEntity {
   @Column()
   cookTime: number;
 
+  @ApiProperty({ example: 4, description: 'Anzahl der Portionen, welche für die Zutaten dieses Rezepts gedacht sind' })
+  @Column()
+  servings: number;
+
   @ApiProperty({ type: () => [Rating], description: 'Liste der Bewertungen für das Rezept' })
   @OneToMany(() => Rating, (rating) => rating.recipe, { cascade: true })
   ratings: Rating[];
@@ -61,7 +65,7 @@ export class Recipe extends BaseEntity {
   @ApiProperty({ example: '2025-03-14T10:00:00Z', description: 'Datum der letzten Aktualisierung' })
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
-  
+
 
   @ApiProperty({ type: () => [Tag], description: 'Liste der Tags für das Rezept' })
   @ManyToMany(() => Tag, { cascade: true })

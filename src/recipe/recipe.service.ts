@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Recipe } from './recipe.entity';
 import { Repository } from 'typeorm';
-import { CreateRecipeDto } from './create-recipe.dto';
+import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { User } from '../user/user.entity';
 import { Ingredient } from './ingredient.entity';
 import { Tag } from './tag.entity';
+import { RecipeDto } from './dto/recipe-response.dto'; 
 
 @Injectable()
 export class RecipeService {
@@ -38,6 +39,7 @@ export class RecipeService {
       text: data.text,
       imgUrl: data.imgUrl,
       difficulty: data.difficulty,
+      servings: 1, // Default-Wert
       prepTime: data.prepTime,
       cookTime: data.cookTime,
       user
@@ -52,7 +54,6 @@ export class RecipeService {
           name: ingredient.name,
           amount: ingredient.amount,
           unit: ingredient.unit as 'g' | 'kg' | 'ml' | 'l' | 'tbsp' | 'tsp' | 'cup' | 'piece',
-          servings: 1, // Default-Wert
           recipe: { id: recipe.id } //  Nur ID übergeben
         });
       });
@@ -85,12 +86,16 @@ export class RecipeService {
     return await this.recipeRepository.find();
   }
 
-  async readOne(id: number): Promise<Recipe | null> {
-    const result = await this.recipeRepository.find({
+  async readOne(id: number): Promise<RecipeDto | null> {
+    const result = await this.recipeRepository.findOne({
       where: { id },
-      relations: { ingredients: true, ratings: { user: true }, tags: true },
+      relations: { ingredients: true, ratings: { user: true }, tags: true, user: true },
     });
-    return result ? result[0] : null;
+
+    if (!result) {
+      return null;
+    }
+    return new RecipeDto(result);
   }
 
   async update(id: number, data: Partial<Recipe>) {

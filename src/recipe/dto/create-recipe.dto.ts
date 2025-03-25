@@ -29,6 +29,10 @@ export class CreateRecipeDto {
   @IsNotEmpty()
   cookTime: number;
 
+  @IsNumber()
+  @IsNotEmpty()
+  servings: number;
+
   @IsArray()
   @IsOptional()
   ingredients?: { name: string; amount: number; unit: string }[];
