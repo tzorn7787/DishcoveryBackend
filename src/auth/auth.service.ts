@@ -27,7 +27,7 @@ export class AuthService {
     const user = new User();
     user.username = username;
     user.email = email;
-    user.passwordHash = password; // Passwort wird im BeforeInsert-Listener gehasht
+    user.passwordHash = password; 
   
     return this.usersRepository.save(user);
   }
