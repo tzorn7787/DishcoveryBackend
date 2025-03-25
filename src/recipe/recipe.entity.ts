@@ -62,9 +62,12 @@ export class Recipe extends BaseEntity {
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
   
-
   @ApiProperty({ type: () => [Tag], description: 'Liste der Tags für das Rezept' })
   @ManyToMany(() => Tag, { cascade: true })
   @JoinTable()
   tags: Tag[];
+
+  @ApiProperty({ example: 1, description: 'Anzahl der Portionen für das Rezept' })
+  @Column()
+  servings: number;
 }

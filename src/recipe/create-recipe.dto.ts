@@ -1,6 +1,10 @@
 import { IsString, IsNotEmpty, IsOptional, IsNumber, IsArray } from 'class-validator';
 
 export class CreateRecipeDto {
+  @IsNumber()
+  @IsOptional()
+  userId?: number;
+
   @IsString()
   @IsNotEmpty()
   title: string;
@@ -36,4 +40,9 @@ export class CreateRecipeDto {
   @IsArray()
   @IsOptional()
   tags?: string[];
+
+  @IsNumber()
+  @IsNotEmpty()
+  servings: number;
+
 }
