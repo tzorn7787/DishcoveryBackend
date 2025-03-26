@@ -58,6 +58,7 @@ export class RecipeDto {
     this.title = recipe.title;
     this.description = recipe.description;
     this.text = recipe.text;
+    this.avgRating = recipe.avgRating;
     this.imgUrl = recipe.imgUrl;
     this.difficulty = recipe.difficulty;
     this.prepTime = recipe.prepTime;
