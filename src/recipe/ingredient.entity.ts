@@ -9,7 +9,7 @@ export class Ingredient {
   id: number;
 
   @ApiProperty({ description: 'Das Rezept, zu dem die Zutat gehört', type: () => Recipe })
-  @ManyToOne(() => Recipe)
+  @ManyToOne(() => Recipe, { onDelete: 'CASCADE' })
   recipe: Recipe;
 
   @ApiProperty({ example: 'Mehl', description: 'Name der Zutat' })

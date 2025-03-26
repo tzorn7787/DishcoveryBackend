@@ -1,6 +1,7 @@
 import { BeforeInsert, Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../shared/base';
 import { WatchEntry } from './watch-entry.entity';
+import {FavoriteEntry} from './favorite-entry.entity'
 import * as bcrypt from 'bcrypt';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -40,9 +41,19 @@ export class User extends BaseEntity {
   @ApiProperty({ description: 'Liste der Watch-Entries des Benutzers', type: () => WatchEntry, isArray: true })
   watchEntries: WatchEntry[];
 
+
+  @OneToMany(() => FavoriteEntry, (favoriteEntry) => favoriteEntry.user, {
+    cascade: true,
+  })
+  @ApiProperty({ description: 'Liste der Watch-Entries des Benutzers', type: () => FavoriteEntry, isArray: true })
+  favoriteEntry: FavoriteEntry[];
+
+
   // Vor dem Speichern das Passwort hashen
   @BeforeInsert()
   async hashPassword() {
     this.passwordHash = await bcrypt.hash(this.passwordHash, 10);
   }
+
+  
 }

@@ -11,7 +11,7 @@ export class Rating extends BaseEntity {
   user: User;
 
   @ApiProperty({ description: 'Das Rezept, das bewertet wurde', type: () => Recipe })
-  @ManyToOne(() => Recipe)
+  @ManyToOne(() => Recipe, { onDelete: 'CASCADE' })
   recipe: Recipe;
 
   @ApiProperty({
