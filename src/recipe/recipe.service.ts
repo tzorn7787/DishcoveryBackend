@@ -6,22 +6,21 @@ import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { User } from '../user/user.entity';
 import { Ingredient } from './ingredient.entity';
 import { Tag } from './tag.entity';
-import { RecipeDto } from './dto/recipe-response.dto'; 
+import { RecipeDto } from './dto/recipe-response.dto';
 import { console } from 'inspector';
 import { CreateRatingDto } from './dto/create-rating.dto';
 import { Rating } from './rating.entity';
-
 
 @Injectable()
 export class RecipeService {
   constructor(
     @InjectRepository(Recipe)
-    private RecipesRepository: Repository<Recipe>,  
+    private RecipesRepository: Repository<Recipe>,
     @InjectRepository(Ingredient)
     private ingredientRepository: Repository<Ingredient>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    @InjectRepository(Rating) 
+    @InjectRepository(Rating)
     private ratingRepository: Repository<Rating>,
     @InjectRepository(Tag)
     private tagRepository: Repository<Tag>,
@@ -31,28 +30,22 @@ export class RecipeService {
     return await this.RecipesRepository.save(Recipe);
   }
 
-   //kommentiert weil keine Ahnung wie es funktioniert. mit create geht aber alles :crying-cat-face:
-   async createRecipe(data: CreateRecipeDto, userId: number): Promise<Recipe> {
-    console.log('📥 Rezept kam an');
-    console.log("🔥 createRecipe aufgerufen")
+  async createRecipe(data: CreateRecipeDto, userId: number): Promise<Recipe> {
     // 1. User laden
     const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new Error('User not found');
     }
-  
-    console.log('👤 Zugewiesener User:', user);
-    console.log('✅ Rezept vor dem Speichern:', data);
 
     // 2. Zutaten erstellen
-    const ingredients = (data.ingredients ?? []).map(ingredient => {
+    const ingredients = (data.ingredients ?? []).map((ingredient) => {
       return this.ingredientRepository.create({
         name: ingredient.name,
         amount: ingredient.amount,
         unit: ingredient.unit as 'g' | 'kg' | 'ml' | 'l' | 'tbsp' | 'tsp' | 'cup' | 'piece',
       });
     });
-  
+
     // 3. Tags erstellen oder laden
     const tags: Tag[] = [];
     if (data.tags && Array.isArray(data.tags)) {
@@ -65,7 +58,7 @@ export class RecipeService {
         tags.push(tag);
       }
     }
-  
+
     // 4. Rezept erstellen (inkl. user, tags, ingredients)
     const recipe = new Recipe();
     recipe.title = data.title;
@@ -80,35 +73,25 @@ export class RecipeService {
     recipe.user = user;
     recipe.ingredients = ingredients;
     recipe.tags = tags;
-  
-    console.log('📦 Gespeichertes Rezept:', recipe);
-
-    const savedRecipe = await this.RecipesRepository.save(recipe);
-    console.log('🏷️ Gespeicherte Tags:', savedRecipe.tags);
 
     // 5. Rezept + Zutaten speichern (Zutaten werden wegen `cascade: true` automatisch gespeichert)
     return await this.RecipesRepository.save(recipe);
   }
-  
 
-
-  // (!) Attention: If you use this api in production, implement a "where" filter
   async readAll(): Promise<Recipe[]> {
-    // return await this.RecipesRepository.find();
     return await this.RecipesRepository.find({
       relations: {
         ingredients: true,
         tags: true,
         ratings: true,
-      }
+      },
     });
   }
 
   async search(query: string): Promise<Recipe[]> {
     const lowerQuery = query.toLowerCase();
-  
-    return this.RecipesRepository
-      .createQueryBuilder('recipe')
+
+    return this.RecipesRepository.createQueryBuilder('recipe')
       .leftJoinAndSelect('recipe.tags', 'tag')
       .leftJoinAndSelect('recipe.ingredients', 'ingredient')
       .leftJoinAndSelect('recipe.ratings', 'rating')
@@ -117,7 +100,6 @@ export class RecipeService {
       .orWhere('LOWER(ingredient.name) LIKE :query', { query: `%${lowerQuery}%` })
       .getMany();
   }
-  
 
   async readOne(id: number): Promise<RecipeDto | null> {
     const result = await this.RecipesRepository.findOne({
@@ -137,12 +119,10 @@ export class RecipeService {
     if (!recipe) {
       throw new Error('Recipe not found');
     }
-    console.log(recipe);
     const user = await this.userRepository.findOneBy({ id: ratingData.userId });
     if (!user) {
       throw new Error('User not found');
     }
-    
 
     //Sucht ob es bereits eine Rating von diesem User für dieses Rezept gibt
     let existingRating = await this.ratingRepository.findOne({
@@ -155,17 +135,15 @@ export class RecipeService {
       existingRating.updatedAt = new Date();
       await this.ratingRepository.save(existingRating);
       return;
-    }
-    else{
+    } else {
       const newRating = this.ratingRepository.create({
         ...ratingData,
         user,
-        recipe,  
+        recipe,
         updatedAt: new Date(),
       });
       await this.ratingRepository.save(newRating);
     }
-
   }
 
   async update(id: number, data: Partial<Recipe>) {
@@ -177,19 +155,16 @@ export class RecipeService {
       where: { id },
       relations: ['ratings', 'ingredients', 'tags'],
     });
-  
+
     if (!recipe) throw new Error('Rezept nicht gefunden');
-  
+
     await this.RecipesRepository.remove(recipe);
   }
-  
 
   async getByUser(userId: number): Promise<Recipe[]> {
     return this.RecipesRepository.find({
       where: { user: { id: userId } },
-      relations: { tags: true, ratings: true }, 
+      relations: { tags: true, ratings: true },
     });
   }
-
-  
 }

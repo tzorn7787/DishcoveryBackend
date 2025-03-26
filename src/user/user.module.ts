@@ -11,6 +11,6 @@ import { Recipe } from 'src/recipe/recipe.entity';
   imports: [TypeOrmModule.forFeature([User, WatchEntry, Recipe, FavoriteEntry])],
   providers: [UserService],
   controllers: [UserController],
-  exports: [UserService,TypeOrmModule],
+  exports: [UserService, TypeOrmModule],
 })
 export class UserModule {}

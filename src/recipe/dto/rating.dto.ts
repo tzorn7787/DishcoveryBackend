@@ -2,7 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { UserResponseDto } from 'src/user/dto/user-response.dto';
 
 export class RatingDto {
-  @ApiProperty({ description: 'Der Benutzer, der die Bewertung abgegeben hat', type: () => UserResponseDto })
+  @ApiProperty({
+    description: 'Der Benutzer, der die Bewertung abgegeben hat',
+    type: () => UserResponseDto,
+  })
   user: UserResponseDto;
 
   @ApiProperty({ description: 'Bewertung in Sternen (1-5)', enum: [1, 2, 3, 4, 5] })

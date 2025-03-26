@@ -1,11 +1,4 @@
-import {
-  Entity,
-  Column,
-  ManyToOne,
-  OneToMany,
-  ManyToMany,
-  JoinTable,
-} from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import { BaseEntity } from '../shared/base';
 import { User } from 'src/user/user.entity';
 import { Ingredient } from './ingredient.entity';
@@ -19,19 +12,32 @@ export class Recipe extends BaseEntity {
   @Column()
   title: string;
 
-  @ApiProperty({ example: 'Leckere italienische Pasta mit Fleischsauce', description: 'Kurzbeschreibung des Rezepts' })
+  @ApiProperty({
+    example: 'Leckere italienische Pasta mit Fleischsauce',
+    description: 'Kurzbeschreibung des Rezepts',
+  })
   @Column()
   description: string;
 
-  @ApiProperty({ example: '1. Nudeln kochen\n2. Sauce zubereiten\n3. Servieren', description: 'Detaillierte Rezeptanleitung' })
+  @ApiProperty({
+    example: '1. Nudeln kochen\n2. Sauce zubereiten\n3. Servieren',
+    description: 'Detaillierte Rezeptanleitung',
+  })
   @Column()
   text: string;
 
-  @ApiProperty({ example: 'https://example.com/spaghetti.jpg', description: 'Bild-URL des Rezepts' })
+  @ApiProperty({
+    example: 'https://example.com/spaghetti.jpg',
+    description: 'Bild-URL des Rezepts',
+  })
   @Column()
   imgUrl: string;
 
-  @ApiProperty({ example: 'medium', description: 'Schwierigkeitsgrad', enum: ['easy', 'medium', 'hard'] })
+  @ApiProperty({
+    example: 'medium',
+    description: 'Schwierigkeitsgrad',
+    enum: ['easy', 'medium', 'hard'],
+  })
   @Column({
     type: 'text',
     enum: ['easy', 'medium', 'hard'],
@@ -65,7 +71,7 @@ export class Recipe extends BaseEntity {
   @ApiProperty({ example: '2025-03-14T10:00:00Z', description: 'Datum der letzten Aktualisierung' })
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
-  
+
   @ApiProperty({ type: () => [Tag], description: 'Liste der Tags für das Rezept' })
   @ManyToMany(() => Tag, { cascade: true })
   @JoinTable()

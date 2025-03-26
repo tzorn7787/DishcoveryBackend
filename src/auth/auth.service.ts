@@ -37,26 +37,25 @@ export class AuthService {
 
   async login(loginDto: LoginUserDto) {
     const { identifier, password } = loginDto;
-  
+
     const user = await this.usersRepository.findOne({
       where: [{ email: identifier }, { username: identifier }],
     });
-  
+
     if (!user) {
       throw new HttpException('Benutzer nicht gefunden', HttpStatus.UNAUTHORIZED);
     }
-  
+
     const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
     if (!isPasswordValid) {
       throw new HttpException('Falsches Passwort', HttpStatus.UNAUTHORIZED);
     }
-  
+
     const { passwordHash, ...userWithoutPassword } = user;
-  
+
     return {
       user: userWithoutPassword,
-      token: 'loggedin', 
+      token: 'loggedin',
+    };
   }
-  
-}
 }

@@ -1,14 +1,13 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { UserResponseDto } from "src/user/dto/user-response.dto";
-import { RatingDto } from "./rating.dto";
-import { Ingredient } from "../ingredient.entity";
-import { Tag } from "../tag.entity";
-import { Recipe } from "../recipe.entity";
+import { ApiProperty } from '@nestjs/swagger';
+import { UserResponseDto } from 'src/user/dto/user-response.dto';
+import { RatingDto } from './rating.dto';
+import { Ingredient } from '../ingredient.entity';
+import { Tag } from '../tag.entity';
+import { Recipe } from '../recipe.entity';
 
-export class RecipeDto{
-
+export class RecipeDto {
   @ApiProperty({ description: 'Eindeutige Id des Rezepts' })
-  id:number;
+  id: number;
 
   @ApiProperty({ description: 'Der Name des Rezepts' })
   title: string;
@@ -31,10 +30,12 @@ export class RecipeDto{
   @ApiProperty({ description: 'Kochzeit in Minuten' })
   cookTime: number;
 
-  @ApiProperty({ description: 'Anzahl der Portionen, welche für die Zutaten dieses Rezepts gedacht sind' })
+  @ApiProperty({
+    description: 'Anzahl der Portionen, welche für die Zutaten dieses Rezepts gedacht sind',
+  })
   servings: number;
 
-  @ApiProperty({example: 5,description: 'Durchschnitts Bewertung in Sternen',})
+  @ApiProperty({ example: 5, description: 'Durchschnitts Bewertung in Sternen' })
   avgRating: number;
 
   @ApiProperty({ description: 'Liste der Bewertungen für das Rezept' })
@@ -52,8 +53,6 @@ export class RecipeDto{
   @ApiProperty({ description: 'Liste der Tags für das Rezept' })
   tags: Tag[];
 
-
-
   constructor(recipe: Recipe) {
     this.id = recipe.id;
     this.title = recipe.title;
@@ -67,7 +66,7 @@ export class RecipeDto{
     this.servings = recipe.servings;
     this.updatedAt = recipe.updatedAt;
     this.user = new UserResponseDto(recipe.user);
-    this.ratings = recipe.ratings?.map(rating => new RatingDto(rating));
+    this.ratings = recipe.ratings?.map((rating) => new RatingDto(rating));
     this.ingredients = recipe.ingredients;
     this.tags = recipe.tags;
   }
