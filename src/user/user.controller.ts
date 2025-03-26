@@ -94,9 +94,9 @@ export class UserController {
    }
   
    @Get(':userId/watchlist')
-getWatchlist(@Param('userId') userId: number): Promise<WatchEntry[]> {
-  return this.userService.getWatchlist(userId);
-}
+  getWatchlist(@Param('userId') userId: number): Promise<WatchEntry[]> {
+     return this.userService.getWatchlist(userId);
+    }
 
 @Get(':userId/favlist')
 getFavorites(@Param('userId') userId: number): Promise<FavoriteEntry[]> {
