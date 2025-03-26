@@ -99,6 +99,21 @@ export class RecipeService {
     });
   }
 
+  async search(query: string): Promise<Recipe[]> {
+    const lowerQuery = query.toLowerCase();
+  
+    return this.RecipesRepository
+      .createQueryBuilder('recipe')
+      .leftJoinAndSelect('recipe.tags', 'tag')
+      .leftJoinAndSelect('recipe.ingredients', 'ingredient')
+      .leftJoinAndSelect('recipe.ratings', 'rating')
+      .where('LOWER(recipe.title) LIKE :query', { query: `%${lowerQuery}%` })
+      .orWhere('LOWER(tag.name) LIKE :query', { query: `%${lowerQuery}%` })
+      .orWhere('LOWER(ingredient.name) LIKE :query', { query: `%${lowerQuery}%` })
+      .getMany();
+  }
+  
+
   async readOne(id: number): Promise<RecipeDto | null> {
     const result = await this.RecipesRepository.findOne({
       where: { id },
