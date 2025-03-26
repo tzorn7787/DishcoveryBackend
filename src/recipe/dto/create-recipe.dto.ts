@@ -44,5 +44,4 @@ export class CreateRecipeDto {
   @IsArray()
   @IsOptional()
   tags?: string[];
-
 }

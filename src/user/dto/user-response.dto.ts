@@ -8,7 +8,10 @@ export class UserResponseDto {
   @ApiProperty({ example: 'testuser', description: 'Der Benutzername' })
   username: string;
 
-  @ApiPropertyOptional({ example: 'Hey, ich liebe Kuchen!', description: 'Profiltext des Benutzers' })
+  @ApiPropertyOptional({
+    example: 'Hey, ich liebe Kuchen!',
+    description: 'Profiltext des Benutzers',
+  })
   profileText?: string;
 
   @ApiPropertyOptional({ example: 'Bild im Base65 format', description: 'Profilbild-URL' })
@@ -23,8 +26,7 @@ export class UserResponseDto {
   /*@ApiProperty({ example: '2024-01-01T12:00:00Z', description: 'Letzte Aktualisierung' })
   updatedAt: Date;*/
 
-
-  constructor(user: User){
+  constructor(user: User) {
     this.id = user.id;
     this.username = user.username;
     this.profileText = user.profileText;

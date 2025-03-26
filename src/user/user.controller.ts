@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Post,
-  Body,
-  Put,
-  Delete,
-  Req,
-} from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Put, Delete, Req } from '@nestjs/common';
 import { Request } from 'express';
 
 interface AuthenticatedRequest extends Request {
@@ -17,16 +8,10 @@ import { UserService } from './user.service';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import {
-  ApiConsumes,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-  ApiParam,
-} from '@nestjs/swagger';
+import { ApiConsumes, ApiOperation, ApiResponse, ApiTags, ApiParam } from '@nestjs/swagger';
 
 import { WatchEntry } from './watch-entry.entity';
-import { FavoriteEntry } from './favorite-entry.entity';   
+import { FavoriteEntry } from './favorite-entry.entity';
 
 @ApiTags('user')
 @Controller('user')
@@ -64,10 +49,7 @@ export class UserController {
   @Put(':id/update-profile')
   @ApiOperation({ summary: 'Profil aktualisieren' })
   @ApiResponse({ status: 200, description: 'Profil erfolgreich aktualisiert', type: User })
-  async updateProfile(
-    @Param('id') id: number,
-    @Body() data: UpdateUserDto,
-  ): Promise<User> {
+  async updateProfile(@Param('id') id: number, @Body() data: UpdateUserDto): Promise<User> {
     return this.userService.updateProfile(id, data);
   }
 
@@ -81,28 +63,25 @@ export class UserController {
     return this.userService.delete(Number(id));
   }
 
-   // POST /user/:id/favlist
-   @Post(':id/favlist')
-   toggleFavorite(@Param('id') userId: number, @Body('recipeId') recipeId: number) {
-     return this.userService.toggleFavorite(userId, recipeId);
-   }
- 
-   // POST /user/:id/watchlist
-   @Post(':id/watchlist')
-   toggleWatch(@Param('id') userId: number, @Body('recipeId') recipeId: number) {
-     return this.userService.toggleWatch(userId, recipeId);
-   }
-  
-   @Get(':userId/watchlist')
+  // POST /user/:id/favlist
+  @Post(':id/favlist')
+  toggleFavorite(@Param('id') userId: number, @Body('recipeId') recipeId: number) {
+    return this.userService.toggleFavorite(userId, recipeId);
+  }
+
+  // POST /user/:id/watchlist
+  @Post(':id/watchlist')
+  toggleWatch(@Param('id') userId: number, @Body('recipeId') recipeId: number) {
+    return this.userService.toggleWatch(userId, recipeId);
+  }
+
+  @Get(':userId/watchlist')
   getWatchlist(@Param('userId') userId: number): Promise<WatchEntry[]> {
-     return this.userService.getWatchlist(userId);
-    }
+    return this.userService.getWatchlist(userId);
+  }
 
-@Get(':userId/favlist')
-getFavorites(@Param('userId') userId: number): Promise<FavoriteEntry[]> {
-  return this.userService.getFavorites(userId);
-}
-
-
-
+  @Get(':userId/favlist')
+  getFavorites(@Param('userId') userId: number): Promise<FavoriteEntry[]> {
+    return this.userService.getFavorites(userId);
+  }
 }
