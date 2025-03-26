@@ -6,9 +6,13 @@ import {
   Body,
   Put,
   Delete,
-  UploadedFile,
-  UseInterceptors,
+  Req,
 } from '@nestjs/common';
+import { Request } from 'express';
+
+interface AuthenticatedRequest extends Request {
+  user: { id: number };
+}
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -20,6 +24,9 @@ import {
   ApiTags,
   ApiParam,
 } from '@nestjs/swagger';
+
+import { WatchEntry } from './watch-entry.entity';
+import { FavoriteEntry } from './favorite-entry.entity';   
 
 @ApiTags('user')
 @Controller('user')
@@ -73,4 +80,29 @@ export class UserController {
   deleteUser(@Param('id') id: number): Promise<void> {
     return this.userService.delete(Number(id));
   }
+
+   // POST /user/:id/favlist
+   @Post(':id/favlist')
+   toggleFavorite(@Param('id') userId: number, @Body('recipeId') recipeId: number) {
+     return this.userService.toggleFavorite(userId, recipeId);
+   }
+ 
+   // POST /user/:id/watchlist
+   @Post(':id/watchlist')
+   toggleWatch(@Param('id') userId: number, @Body('recipeId') recipeId: number) {
+     return this.userService.toggleWatch(userId, recipeId);
+   }
+  
+   @Get(':userId/watchlist')
+  getWatchlist(@Param('userId') userId: number): Promise<WatchEntry[]> {
+     return this.userService.getWatchlist(userId);
+    }
+
+@Get(':userId/favlist')
+getFavorites(@Param('userId') userId: number): Promise<FavoriteEntry[]> {
+  return this.userService.getFavorites(userId);
+}
+
+
+
 }
