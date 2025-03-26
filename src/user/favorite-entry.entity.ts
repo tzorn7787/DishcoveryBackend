@@ -1,10 +1,5 @@
 import { Recipe } from 'src/recipe/recipe.entity';
-import {
-  CreateDateColumn,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from '../user/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -22,8 +17,10 @@ export class FavoriteEntry {
   @ManyToOne(() => Recipe, { onDelete: 'CASCADE' })
   recipe: Recipe;
 
-  @ApiProperty({ example: '2025-03-26T10:00:00Z', description: 'Zeitpunkt, an dem der Eintrag erstellt wurde' })
+  @ApiProperty({
+    example: '2025-03-26T10:00:00Z',
+    description: 'Zeitpunkt, an dem der Eintrag erstellt wurde',
+  })
   @CreateDateColumn()
   savedAt: Date;
-
 }

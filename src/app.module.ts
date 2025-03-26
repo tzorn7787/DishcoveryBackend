@@ -30,7 +30,7 @@ import { AuthService } from './auth/auth.service';
     UserModule,
     RecipeModule,
     RecipeReportModule,
-    AuthModule
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
@@ -40,10 +40,8 @@ export class AppModule implements OnModuleInit {
     private readonly userService: UserService,
     private readonly recipeService: RecipeService,
     private readonly recipeReportService: RecipeReportService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
   ) {}
 
-  async onModuleInit() {
-    
-  }
+  async onModuleInit() {}
 }

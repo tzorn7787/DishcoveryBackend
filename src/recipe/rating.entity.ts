@@ -22,7 +22,11 @@ export class Rating extends BaseEntity {
   @Column({ type: 'numeric', enum: [1, 2, 3, 4, 5] })
   rating: 1 | 2 | 3 | 4 | 5;
 
-  @ApiProperty({ example: 'Super leckeres Rezept!', description: 'Optionaler Kommentar zur Bewertung', required: false })
+  @ApiProperty({
+    example: 'Super leckeres Rezept!',
+    description: 'Optionaler Kommentar zur Bewertung',
+    required: false,
+  })
   @Column({ nullable: true })
   comment?: string;
 

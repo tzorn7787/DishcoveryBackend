@@ -12,17 +12,23 @@ export class AuthController {
 
   @Post('register')
   @ApiOperation({ summary: 'Registriert einen neuen Benutzer' })
-  @ApiResponse({ status: 201, description: 'Benutzer wurde erfolgreich registriert', type: UserResponseDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Benutzer wurde erfolgreich registriert',
+    type: UserResponseDto,
+  })
   async register(@Body() userData: RegisterUserDto) {
     return this.authService.register(userData);
   }
 
-
   @Post('login')
   @ApiOperation({ summary: 'Loggt benutzer ein' })
-  @ApiResponse({ status: 201, description: 'Benutzer wurde erfolgreich eingeloggt', type: LoginUserDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Benutzer wurde erfolgreich eingeloggt',
+    type: LoginUserDto,
+  })
   async login(@Body() loginDto: LoginUserDto) {
-  return this.authService.login(loginDto);
-}
-  
+    return this.authService.login(loginDto);
+  }
 }

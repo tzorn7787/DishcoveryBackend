@@ -4,9 +4,6 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'; // Swagger-Imp
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { json, urlencoded } from 'express';
 
-
-
-
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   // Swagger Konfiguration
@@ -21,12 +18,12 @@ async function bootstrap() {
   app.use(json({ limit: '10mb' }));
   app.use(urlencoded({ extended: true, limit: '10mb' }));
 
-    app.enableCors({
+  app.enableCors({
     origin: 'http://localhost:4200',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
-});
+    credentials: true,
+  });
 
   await app.listen(3001); //Statischer Port festgelegt
 }
