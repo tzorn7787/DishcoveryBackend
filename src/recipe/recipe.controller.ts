@@ -1,7 +1,8 @@
-import { Controller, Get, Param, Post, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Put, Delete, Query } from '@nestjs/common';
 import { RecipeService } from './recipe.service';
 import { Recipe } from './recipe.entity';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { BadRequestException } from '@nestjs/common';
 
 
 @ApiTags('recipe') // Swagger-Tag für bessere Gruppierung
@@ -17,15 +18,33 @@ export class RecipeController {
     return this.recipeService.readAll();
   }
 
-  // GET /recipe/:id → Gibt ein Rezept nach ID zurück
+  // WICHTIG: Diese Route MUSS VOR ':id' stehen!
+@Get('search')
+@ApiOperation({ summary: 'Rezepte durchsuchen (Titel, Zutaten, Tags)' })
+@ApiResponse({ status: 200, description: 'Gefundene Rezepte', type: [Recipe] })
+searchRecipes(@Query('q') query: string): Promise<Recipe[]> {
+  return this.recipeService.search(query);
+}
+  
+
   @Get(':id')
   @ApiOperation({ summary: 'Ein Rezept nach ID abrufen' })
   @ApiParam({ name: 'id', type: Number, example: 1, description: 'Die ID des Rezepts' })
   @ApiResponse({ status: 200, description: 'Rezept gefunden', type: Recipe })
+  @ApiResponse({ status: 400, description: 'Ungültige ID (keine Zahl)' })
   @ApiResponse({ status: 404, description: 'Rezept nicht gefunden' })
-  getRecipe(@Param('id') id: number): Promise<Recipe | null> {
-    return this.recipeService.readOne(Number(id));
+  getRecipe(@Param('id') id: string): Promise<Recipe | null> {
+    const parsedId = parseInt(id, 10);
+  
+    if (isNaN(parsedId)) {
+      throw new BadRequestException('Ungültige ID – bitte eine Zahl angeben.');
+    }
+  
+    return this.recipeService.readOne(parsedId);
   }
+  
+
+
 
   // GET /recipe/user/:userId
   @Get('by-user/:userId')
@@ -35,7 +54,7 @@ export class RecipeController {
 
     // POST für die Postman-Tests, muss dann halt auskommentiert werden
   //  @Post()
- //   createRecipe1(@Body() recipeData: any): Promise<Recipe> {
+ //   createRecipe(@Body() recipeData: any): Promise<Recipe> {
   //    const userId = recipeData.userId;
   //    return this.recipeService.create(recipeData, userId);
 //}
