@@ -131,8 +131,16 @@ export class RecipeService {
   }
 
   async delete(id: number): Promise<void> {
-    await this.RecipesRepository.delete(id);
+    const recipe = await this.RecipesRepository.findOne({
+      where: { id },
+      relations: ['ratings', 'ingredients', 'tags'],
+    });
+  
+    if (!recipe) throw new Error('Rezept nicht gefunden');
+  
+    await this.RecipesRepository.remove(recipe);
   }
+  
 
   async getByUser(userId: number): Promise<Recipe[]> {
     return this.RecipesRepository.find({

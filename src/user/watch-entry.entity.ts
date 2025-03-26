@@ -15,7 +15,7 @@ export class WatchEntry {
   @ManyToOne(() => User)
   user: User;
 
-  @ManyToOne(() => Recipe)
+  @ManyToOne(() => Recipe, { onDelete: 'CASCADE' })
   recipe: Recipe;
 
   @CreateDateColumn()
