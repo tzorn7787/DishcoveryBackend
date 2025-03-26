@@ -2,6 +2,7 @@ import { Controller, Get, Param, Post, Body, Put, Delete, Query } from '@nestjs/
 import { RecipeService } from './recipe.service';
 import { Recipe } from './recipe.entity';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { RecipeDto } from './dto/recipe-response.dto';
 import { BadRequestException } from '@nestjs/common';
 
 
@@ -30,10 +31,10 @@ searchRecipes(@Query('q') query: string): Promise<Recipe[]> {
   @Get(':id')
   @ApiOperation({ summary: 'Ein Rezept nach ID abrufen' })
   @ApiParam({ name: 'id', type: Number, example: 1, description: 'Die ID des Rezepts' })
-  @ApiResponse({ status: 200, description: 'Rezept gefunden', type: Recipe })
+  @ApiResponse({ status: 200, description: 'Rezept gefunden', type: RecipeDto })
   @ApiResponse({ status: 400, description: 'Ungültige ID (keine Zahl)' })
   @ApiResponse({ status: 404, description: 'Rezept nicht gefunden' })
-  getRecipe(@Param('id') id: string): Promise<Recipe | null> {
+  getRecipe(@Param('id') id: string): Promise<RecipeDto | null> {
     const parsedId = parseInt(id, 10);
   
     if (isNaN(parsedId)) {

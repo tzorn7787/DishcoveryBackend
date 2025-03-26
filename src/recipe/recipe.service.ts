@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Recipe } from './recipe.entity';
 import { Repository } from 'typeorm';
-import { CreateRecipeDto } from './create-recipe.dto';
+import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { User } from '../user/user.entity';
 import { Ingredient } from './ingredient.entity';
 import { Tag } from './tag.entity';
+import { RecipeDto } from './dto/recipe-response.dto'; 
 import { console } from 'inspector';
 
 
@@ -113,12 +114,16 @@ export class RecipeService {
   }
   
 
-  async readOne(id: number): Promise<Recipe | null> {
-    const result = await this.RecipesRepository.find({
+  async readOne(id: number): Promise<RecipeDto | null> {
+    const result = await this.RecipesRepository.findOne({
       where: { id },
-      relations: { ingredients: true, ratings: { user: true }, tags: true },
+      relations: { ingredients: true, ratings: { user: true }, tags: true, user: true },
     });
-    return result ? result[0] : null;
+
+    if (!result) {
+      return null;
+    }
+    return new RecipeDto(result);
   }
 
   async update(id: number, data: Partial<Recipe>) {

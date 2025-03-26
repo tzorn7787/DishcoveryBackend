@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { User } from '../user.entity';
 
 export class UserResponseDto {
   @ApiProperty({ example: 1, description: 'Die eindeutige ID des Benutzers' })
@@ -19,6 +20,17 @@ export class UserResponseDto {
   @ApiProperty({ example: '2024-01-01T12:00:00Z', description: 'Erstellungsdatum' })
   createdAt: Date;
 
-  @ApiProperty({ example: '2024-01-01T12:00:00Z', description: 'Letzte Aktualisierung' })
-  updatedAt: Date;
+  /*@ApiProperty({ example: '2024-01-01T12:00:00Z', description: 'Letzte Aktualisierung' })
+  updatedAt: Date;*/
+
+
+  constructor(user: User){
+    this.id = user.id;
+    this.username = user.username;
+    this.profileText = user.profileText;
+    this.userImgUrl = user.userImgUrl;
+    this.role = user.role;
+    this.createdAt = user.createdAt;
+    //this.updatedAt = user.updatedAt;
+  }
 }
