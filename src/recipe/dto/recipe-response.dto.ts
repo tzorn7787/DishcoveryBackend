@@ -34,6 +34,13 @@ export class RecipeDto{
   @ApiProperty({ description: 'Anzahl der Portionen, welche für die Zutaten dieses Rezepts gedacht sind' })
   servings: number;
 
+  @ApiProperty({
+    example: 5,
+    description: 'Durchschnitts Bewertung in Sternen (1-5)',
+    enum: [1, 2, 3, 4, 5],
+  })
+  avgRating: 1 | 2 | 3 | 4 | 5;
+
   @ApiProperty({ description: 'Liste der Bewertungen für das Rezept' })
   ratings: RatingDto[];
 

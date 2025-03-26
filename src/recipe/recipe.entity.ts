@@ -46,6 +46,14 @@ export class Recipe extends BaseEntity {
   @Column()
   cookTime: number;
 
+  @ApiProperty({
+    example: 5,
+    description: 'Durchschnitts Bewertung in Sternen (1-5)',
+    enum: [1, 2, 3, 4, 5],
+  })
+  @Column({ type: 'numeric', enum: [0, 1, 2, 3, 4, 5] })
+  avgRating: 0 | 1 | 2 | 3 | 4 | 5;
+
   @ApiProperty({ type: () => [Rating], description: 'Liste der Bewertungen für das Rezept' })
   @OneToMany(() => Rating, (rating) => rating.recipe, { cascade: true })
   ratings: Rating[];

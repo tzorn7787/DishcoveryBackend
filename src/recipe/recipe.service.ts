@@ -75,6 +75,7 @@ export class RecipeService {
     recipe.difficulty = data.difficulty;
     recipe.prepTime = data.prepTime;
     recipe.cookTime = data.cookTime;
+    recipe.avgRating = 0;
     recipe.servings = data.servings;
     recipe.user = user;
     recipe.ingredients = ingredients;
@@ -155,16 +156,15 @@ export class RecipeService {
       await this.ratingRepository.save(existingRating);
       return;
     }
-
-
-    const newRating = this.ratingRepository.create({
-      ...ratingData,
-      user,
-      recipe,  
-      updatedAt: new Date(),
-    });
-  
-    await this.ratingRepository.save(newRating);
+    else{
+      const newRating = this.ratingRepository.create({
+        ...ratingData,
+        user,
+        recipe,  
+        updatedAt: new Date(),
+      });
+      await this.ratingRepository.save(newRating);
+    }
 
   }
 
