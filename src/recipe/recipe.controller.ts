@@ -1,9 +1,10 @@
-import { Controller, Get, Param, Post, Body, Put, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Put, Delete, Query, Patch } from '@nestjs/common';
 import { RecipeService } from './recipe.service';
 import { Recipe } from './recipe.entity';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { RecipeDto } from './dto/recipe-response.dto';
 import { BadRequestException } from '@nestjs/common';
+import { CreateRatingDto } from './dto/create-rating.dto';
 
 
 @ApiTags('recipe') // Swagger-Tag für bessere Gruppierung
@@ -76,6 +77,13 @@ searchRecipes(@Query('q') query: string): Promise<Recipe[]> {
   @ApiResponse({ status: 404, description: 'Rezept nicht gefunden' })
   updateRecipe(@Param('id') id: number, @Body() data: Partial<Recipe>) {
     return this.recipeService.update(Number(id), data);
+  }
+
+  @Patch(':id/rating')
+  async addRating(
+    @Param('id') recipeId: number,
+    @Body() createRatingDto: CreateRatingDto & { userId: number },) {
+    return this.recipeService.addRating(recipeId, createRatingDto);
   }
 
   // DELETE /recipe/:id → Löscht ein Rezept

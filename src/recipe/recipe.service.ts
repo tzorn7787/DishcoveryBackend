@@ -8,6 +8,8 @@ import { Ingredient } from './ingredient.entity';
 import { Tag } from './tag.entity';
 import { RecipeDto } from './dto/recipe-response.dto'; 
 import { console } from 'inspector';
+import { CreateRatingDto } from './dto/create-rating.dto';
+import { Rating } from './rating.entity';
 
 
 @Injectable()
@@ -19,6 +21,8 @@ export class RecipeService {
     private ingredientRepository: Repository<Ingredient>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    @InjectRepository(Rating) 
+    private ratingRepository: Repository<Rating>,
     @InjectRepository(Tag)
     private tagRepository: Repository<Tag>,
   ) {}
@@ -71,6 +75,7 @@ export class RecipeService {
     recipe.difficulty = data.difficulty;
     recipe.prepTime = data.prepTime;
     recipe.cookTime = data.cookTime;
+    recipe.avgRating = 0;
     recipe.servings = data.servings;
     recipe.user = user;
     recipe.ingredients = ingredients;
@@ -126,6 +131,43 @@ export class RecipeService {
     return new RecipeDto(result);
   }
 
+  // Fügt Rating für ein Rezept hinzu
+  async addRating(recipeId: number, ratingData: CreateRatingDto & { userId: number }) {
+    const recipe = await this.RecipesRepository.findOneBy({ id: recipeId });
+    if (!recipe) {
+      throw new Error('Recipe not found');
+    }
+    console.log(recipe);
+    const user = await this.userRepository.findOneBy({ id: ratingData.userId });
+    if (!user) {
+      throw new Error('User not found');
+    }
+    
+
+    //Sucht ob es bereits eine Rating von diesem User für dieses Rezept gibt
+    let existingRating = await this.ratingRepository.findOne({
+      where: { user: { id: ratingData.userId }, recipe: { id: recipeId } },
+    });
+    //Falls eins existiert, wird dieses verändert und kein neues wird erstellt
+    if (existingRating) {
+      existingRating.rating = ratingData.rating;
+      existingRating.comment = ratingData.comment;
+      existingRating.updatedAt = new Date();
+      await this.ratingRepository.save(existingRating);
+      return;
+    }
+    else{
+      const newRating = this.ratingRepository.create({
+        ...ratingData,
+        user,
+        recipe,  
+        updatedAt: new Date(),
+      });
+      await this.ratingRepository.save(newRating);
+    }
+
+  }
+
   async update(id: number, data: Partial<Recipe>) {
     return await this.RecipesRepository.update(id, data);
   }
@@ -148,6 +190,6 @@ export class RecipeService {
       relations: { tags: true, ratings: true }, 
     });
   }
-  
+
   
 }
