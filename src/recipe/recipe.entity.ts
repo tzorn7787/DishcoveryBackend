@@ -46,8 +46,8 @@ export class Recipe extends BaseEntity {
   @Column()
   cookTime: number;
 
-  @ApiProperty({example: 5, description: 'Durchschnitts Bewertung in Sternen',
-  })
+  @ApiProperty({example: 5, description: 'Durchschnitts Bewertung in Sternen',})
+  @Column()
   avgRating: number;
 
   @ApiProperty({ type: () => [Rating], description: 'Liste der Bewertungen für das Rezept' })
