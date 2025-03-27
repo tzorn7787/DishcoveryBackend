@@ -115,7 +115,11 @@ export class RecipeService {
 
   // Fügt Rating für ein Rezept hinzu
   async addRating(recipeId: number, ratingData: CreateRatingDto & { userId: number }) {
-    const recipe = await this.RecipesRepository.findOneBy({ id: recipeId });
+    const recipe = await this.RecipesRepository.findOne({
+      where: { id: recipeId },
+      relations: ['ratings'],
+    });
+
     if (!recipe) {
       throw new Error('Recipe not found');
     }
@@ -134,15 +138,32 @@ export class RecipeService {
       existingRating.comment = ratingData.comment;
       existingRating.updatedAt = new Date();
       await this.ratingRepository.save(existingRating);
-      return;
     } else {
       const newRating = this.ratingRepository.create({
         ...ratingData,
+        rating: ratingData.rating,
         user,
         recipe,
         updatedAt: new Date(),
       });
       await this.ratingRepository.save(newRating);
+    }
+
+    //Ladet das Rezept mit aktuellen Ratings neu
+    const updatedRecipe = await this.RecipesRepository.findOne({
+      where: { id: recipeId },
+      relations: ['ratings'],
+    });
+    if (!updatedRecipe) {
+      throw new Error('Recipe not found after rating update');
+    }
+
+    //Berechnet die neue Durchschnittsbewertung
+    const allRatings = updatedRecipe.ratings;
+    
+    if (allRatings.length > 0) {
+      recipe.avgRating = Math.round((allRatings.reduce((sum, r) => sum + Number(r.rating), 0) / allRatings.length));
+      await this.RecipesRepository.update(recipeId, { avgRating: recipe.avgRating });
     }
   }
 
